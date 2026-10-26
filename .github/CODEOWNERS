@@ -1,0 +1,7 @@
+# Todo cambio necesita la aprobacion del dueno. Las rutas sensibles se listan
+# aparte para que nunca queden sin revision aunque cambie esta regla general.
+*                    @MesaRestrepo
+/.github/            @MesaRestrepo
+/skills/             @MesaRestrepo
+/scripts/            @MesaRestrepo
+/install.py          @MesaRestrepo

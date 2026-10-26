@@ -16,14 +16,17 @@ Uso:
     procesar_video.py --verificar
 """
 import argparse
+import ipaddress
 import json
 import os
 import re
 import shutil
+import socket
 import subprocess
 import sys
 import warnings
 from pathlib import Path
+from urllib.parse import urlparse
 
 os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
 os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
@@ -90,8 +93,25 @@ def mmss(seg):
     return f"{seg // 60}:{seg % 60:02d}"
 
 
+def validar_url(url):
+    """Rechaza URLs hacia tu red local o internas (SSRF): un video malicioso podria
+    pedirle a tu IA que abra http://192.168.x.x, localhost o servicios en la nube."""
+    host = urlparse(url).hostname
+    if not host:
+        raise Fallo("URL invalida.")
+    try:
+        direcciones = {i[4][0].split("%")[0] for i in socket.getaddrinfo(host, None)}
+    except socket.gaierror:
+        raise Fallo(f"No se pudo resolver el dominio '{host}'.")
+    for d in direcciones:
+        if not ipaddress.ip_address(d).is_global:
+            raise Fallo(f"Bloqueado: '{host}' apunta a una direccion privada o local ({d}). "
+                        "Solo se descargan videos de internet publico.")
+
+
 def descargar(url, carpeta, cookies_nav, cookies_arch):
-    cmd = [sys.executable, "-m", "yt_dlp", "--no-playlist", "--no-warnings",
+    validar_url(url)
+    cmd =[sys.executable, "-m", "yt_dlp", "--no-playlist", "--no-warnings",
            "--write-info-json", "--write-subs", "--write-auto-subs",
            "--sub-langs", "es.*,en.*,-live_chat", "--convert-subs", "srt",
            "-f", "bv*[height<=720]+ba/b[height<=720]/b",
@@ -104,7 +124,7 @@ def descargar(url, carpeta, cookies_nav, cookies_arch):
     if cookies_arch:
         cmd += ["--cookies", cookies_arch]
     try:
-        ejecutar(cmd + [url])
+        ejecutar(cmd + ["--", url])  # "--": nunca interpretar la URL como opcion de yt-dlp
     except Fallo as e:
         raise Fallo(f"No se pudo descargar:\n{e}\n\n{pista_de_error(str(e))}")
     videos = [p for p in carpeta.glob("video.*") if p.suffix.lower() in VIDEO]

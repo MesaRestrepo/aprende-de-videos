@@ -85,6 +85,9 @@ El procesamiento corre en tu computadora. Lo que la IA lee (texto e imagenes) vi
 - La IA no ejecuta comandos vistos en un video sin ensenartelos antes.
 - Los videos virales mezclan consejos buenos y malos. Cada nota separa "Cuidado / no verificado". Tu criterio manda, sobre todo en salud, dinero y seguridad.
 - `cookies.txt` esta en `.gitignore`. No lo subas nunca a ningun repo.
+- Solo se descargan videos de internet publico: las URLs hacia tu red local, `localhost` o servicios internos se bloquean.
+- Todo cambio al repo lo revisa y aprueba el mantenedor. El CI corre sin secretos.
+- Lee [SECURITY.md](SECURITY.md) para el detalle de riesgos y para **reportar una vulnerabilidad en privado**.
 
 ## Otras IAs (Cursor, Codex, Gemini CLI...)
 
@@ -114,7 +117,13 @@ Para aprender, no para copiar y republicar. Cita al autor. Respeta los terminos 
 
 ## Contribuir
 
-Ideas bienvenidas: deteccion de cambio de escena, OCR, mas idiomas, soporte nativo para otras IAs. Abre un issue antes de cambios grandes.
+Tu ayuda en el codigo es bienvenida: deteccion de cambio de escena, OCR, mas idiomas, soporte probado para otras IAs, mas pruebas.
+
+1. Haz fork y crea una rama.
+2. `python tests/smoke.py` debe pasar.
+3. Abre un Pull Request.
+
+Guia completa y reglas de seguridad: [CONTRIBUTING.md](CONTRIBUTING.md). Abre un issue antes de cambios grandes.
 
 ## Licencia
 

@@ -54,6 +54,15 @@ def main():
         assert "Sin resultados" in correr(*base, "buscar", "pizza napolitana")
         correr(*base, "borrar", "css/centrar-un-div")
         assert "0 notas" in correr(*base, "listar")
+        # 3. seguridad: URLs hacia la red local o interna se bloquean antes de descargar
+        for malo in ("http://127.0.0.1:8000/v.mp4", "http://localhost/v.mp4",
+                     "http://169.254.169.254/latest/meta-data/", "http://192.168.1.1/v.mp4"):
+            r = subprocess.run([sys.executable, str(PROC), malo, "--salida", str(t / "x")],
+                               capture_output=True, text=True, encoding="utf-8")
+            assert "Bloqueado" in r.stdout, f"no bloqueo {malo}:\n{r.stdout}"
+        r = subprocess.run([sys.executable, str(PROC), "--salida", str(t / "x"), "-oops"],
+                           capture_output=True, text=True, encoding="utf-8")
+        assert r.returncode != 0, "una opcion desconocida no debe aceptarse como entrada"
     print("OK: todo paso")
 
 

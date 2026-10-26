@@ -1,0 +1,35 @@
+name: Error
+description: Algo no funciona como dice el README
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Si es una **vulnerabilidad**, no la publiques aqui: usa el [reporte privado](https://github.com/MesaRestrepo/aprende-de-videos/security/advisories/new).
+        No pegues cookies, tokens ni enlaces privados.
+  - type: textarea
+    id: que
+    attributes:
+      label: Que paso
+      description: Que esperabas y que obtuviste. Pega el mensaje de error completo.
+    validations:
+      required: true
+  - type: input
+    id: fuente
+    attributes:
+      label: Plataforma del video
+      placeholder: TikTok, YouTube Shorts, archivo local...
+    validations:
+      required: true
+  - type: textarea
+    id: pasos
+    attributes:
+      label: Como reproducirlo
+      placeholder: "1. python ... 2. ..."
+    validations:
+      required: true
+  - type: input
+    id: entorno
+    attributes:
+      label: Sistema y version de Python
+      placeholder: Windows 11, Python 3.11
