@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.aprende_tmp/
+video_salida/
+venv/
+.venv/
+cookies.txt
+*.cookies
